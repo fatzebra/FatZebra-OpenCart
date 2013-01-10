@@ -11,7 +11,7 @@ class ControllerPaymentFatZebra extends Controller {
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
         $this->data['item_name'] = html_entity_decode($this->config->get('config_store'), ENT_QUOTES, 'UTF-8');
-        $this->data['currency_code'] = $order_info['currency_code'];
+        $this->data['currency_code'] = "AUD";
         $this->data['amount'] = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], FALSE);
         $this->data['first_name'] = html_entity_decode($order_info['payment_firstname'], ENT_QUOTES, 'UTF-8');
         $this->data['last_name'] = html_entity_decode($order_info['payment_lastname'], ENT_QUOTES, 'UTF-8');
@@ -33,11 +33,11 @@ class ControllerPaymentFatZebra extends Controller {
                           $this->data["return_path"]);
         $this->data['verification_value'] = hash_hmac("md5", implode(":", $ver_data), $this->config->get("fatzebra_shared_secret"));
 
-        if($this->config->get('fatzebra_test_mode') == true || $this->config->get('fatzebra_sandbox_mode') == true) {
+        if($this->config->get('fatzebra_test_mode') == 1 || $this->config->get('fatzebra_sandbox_mode') == 1) {
           $this->data['text_testing'] = $this->language->get('text_testing'); 
           $this->data['direct_action'] = "https://gateway.sandbox.fatzebra.com.au/v2/purchases/direct/" . $this->config->get("fatzebra_username");
         } else {
-            $this->data['direct_action'] = "https://gateway.sandbox.fatzebra.com.au/v2/purchases/direct/" . $this->config->get("fatzebra_username");
+            $this->data['direct_action'] = "https://gateway.fatzebra.com.au/v2/purchases/direct/" . $this->config->get("fatzebra_username");
         }
 
 
